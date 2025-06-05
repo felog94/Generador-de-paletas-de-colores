@@ -1,4 +1,3 @@
-/* **IMPORTANTE: Define box-sizing para un cálculo de ancho predecible** */
 * {
     box-sizing: border-box;
 }
@@ -21,9 +20,6 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
-    /* Aumentamos el max-width del contenedor a un valor generoso.
-       Esto asegura que el contenedor no sea el cuello de botella
-       y que el 'calc()' de los color-box tenga suficiente espacio para trabajar. */
     max-width: 1000px; /* Ancho generoso para que quepan 5 en fila */
     width: 100%; /* Permite que el contenedor se encoja en pantallas pequeñas */
 }
@@ -44,9 +40,6 @@ h1 {
 }
 
 .color-box {
-    /* **AJUSTE CLAVE: Usamos calc() para asegurar que 5 elementos quepan en la fila con los gaps.** */
-    /* La fórmula es: (100% - (num_gaps * gap_value)) / num_items */
-    /* Para 5 elementos y 4 gaps de 15px (4 * 15px = 60px): */
     width: calc((100% - (4 * 15px)) / 5); /* CALCULO PRECISO PARA 5 EN FILA */
     
     height: 140px; /* Altura fija para mantener el aspecto cuadrado */
@@ -137,7 +130,7 @@ h1 {
     visibility: visible;
 }
 
-/* **Estilos para Drag and Drop (NUEVOS)** */
+/* **Estilos para Drag and Drop** */
 .color-box.dragging {
     opacity: 0.5; /* Hace que el elemento arrastrado sea semi-transparente */
     border: 2px dashed #007bff; /* Un borde punteado para indicarlo */
