@@ -25,7 +25,7 @@ function createColorBox(color, isInitiallyLocked = false) {
     // Elemento para mostrar el código HEX
     const colorHex = document.createElement('span');
     colorHex.classList.add('color-hex');
-    colorHex.textContent = color; // Asigna el color recibido
+    colorHex.textContent = color;
 
     // Botón de bloqueo
     const lockButton = document.createElement('button');
@@ -124,7 +124,7 @@ function copyToClipboard(text) {
     });
 }
 
-// --- Función principal para generar la paleta (REVISADA) ---
+// --- Función principal para generar la paleta ---
 function generatePalette() {
     const lockedColorsData = [];
     document.querySelectorAll('.color-box').forEach(box => {
@@ -133,7 +133,7 @@ function generatePalette() {
         // El color se lee directamente de la propiedad de estilo del elemento.
         if (lockButton && lockButton.dataset.locked === 'true' && box.style.backgroundColor) {
             lockedColorsData.push({
-                color: box.style.backgroundColor, // <--- **LECTURA DIRECTA DEL COLOR ACTUAL**
+                color: box.style.backgroundColor,
                 isLocked: true
             });
         }
@@ -155,6 +155,12 @@ function generatePalette() {
         createColorBox(randomColor, false);
     }
 }
+
+// --- Event Listeners ---
+generateButton.addEventListener('click', generatePalette);
+
+// --- Carga inicial al cargar la página ---
+document.addEventListener('DOMContentLoaded', generatePalette);
 
 // --- Event Listeners ---
 generateButton.addEventListener('click', generatePalette);
