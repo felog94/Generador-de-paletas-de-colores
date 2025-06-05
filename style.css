@@ -1,0 +1,180 @@
+/* **IMPORTANTE: Define box-sizing para un cálculo de ancho predecible** */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    color: #333;
+    overflow: hidden; /* Para evitar scroll si los colores no llenan la pantalla perfectamente */
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    /* Aumentamos el max-width del contenedor a un valor generoso.
+       Esto asegura que el contenedor no sea el cuello de botella
+       y que el 'calc()' de los color-box tenga suficiente espacio para trabajar. */
+    max-width: 1000px; /* Ancho generoso para que quepan 5 en fila */
+    width: 100%; /* Permite que el contenedor se encoja en pantallas pequeñas */
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.palette-container {
+    display: flex;
+    flex-direction: row; /* Asegura la dirección de fila */
+    flex-wrap: wrap; /* Permite el salto de línea si no hay espacio */
+    justify-content: center; /* Centra los elementos horizontalmente */
+    align-items: center; /* Centra los elementos verticalmente */
+    gap: 15px; /* Espacio entre los cuadrados de color */
+    margin-bottom: 30px;
+}
+
+.color-box {
+    /* **AJUSTE CLAVE: Usamos calc() para asegurar que 5 elementos quepan en la fila con los gaps.** */
+    /* La fórmula es: (100% - (num_gaps * gap_value)) / num_items */
+    /* Para 5 elementos y 4 gaps de 15px (4 * 15px = 60px): */
+    width: calc((100% - (4 * 15px)) / 5); /* CALCULO PRECISO PARA 5 EN FILA */
+    
+    height: 140px; /* Altura fija para mantener el aspecto cuadrado */
+    
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: grab; /* Cursor para indicar que es arrastrable */
+    position: relative;
+    flex-shrink: 1; /* Permite que se encojan si es necesario */
+    flex-grow: 1; /* Permite que crezcan un poco si hay espacio, pero calc() lo controla más */
+}
+
+.color-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.color-hex {
+    font-size: 0.9em;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 4px;
+    margin-top: auto;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.color-box:hover .color-hex {
+    opacity: 1;
+}
+
+.lock-button {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px;
+    transition: color 0.2s ease;
+}
+
+.lock-button.locked {
+    color: #ffd700;
+}
+
+.lock-button:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+#generate-button {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#generate-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.copy-message {
+    opacity: 0;
+    visibility: hidden;
+    margin-top: 20px;
+    color: #28a745;
+    font-weight: bold;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.copy-message.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* **Estilos para Drag and Drop (NUEVOS)** */
+.color-box.dragging {
+    opacity: 0.5; /* Hace que el elemento arrastrado sea semi-transparente */
+    border: 2px dashed #007bff; /* Un borde punteado para indicarlo */
+}
+
+.color-box.drag-over {
+    border: 2px dashed #28a745; /* Borde al elemento sobre el que se arrastra */
+    transform: scale(1.02); /* Pequeño efecto de escala */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 890px) { /* Reducimos a 4 por fila cuando el ancho de la pantalla lo exija */
+    .color-box {
+        width: calc((100% - (3 * 15px)) / 4); /* (100% - 3 gaps) / 4 items */
+        height: 130px;
+    }
+}
+
+@media (max-width: 680px) { /* Reducimos a 3 por fila para tablets */
+    .color-box {
+        width: calc((100% - (2 * 15px)) / 3); /* (100% - 2 gaps) / 3 items */
+        height: 120px;
+    }
+}
+
+@media (max-width: 500px) { /* Reducimos a 2 por fila para móviles grandes */
+    .color-box {
+        width: calc((100% - (1 * 15px)) / 2); /* (100% - 1 gap) / 2 items */
+        height: 110px;
+    }
+}
+
+@media (max-width: 380px) { /* Reducimos a 1 por fila para móviles pequeños */
+    .color-box {
+        width: 100%; /* 1 por fila */
+        max-width: 200px; /* Para que no se estire demasiado */
+        height: 100px;
+    }
+}
